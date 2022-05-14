@@ -145,6 +145,14 @@ def delete_status():
     else:
         print("Status was successfully deleted")
 
+@pysnooper.snoop()
+def search_all_status_updates():
+    user_id = input('User ID: ')
+    result = main.search_all_status_updates(user_id, status_collection)
+    if not main.search_all_status_updates(user_id, status_collection):
+        print("There are no status updates for this user")
+    else:
+        print(result)
 
 @pysnooper.snoop()
 def quit_program():
@@ -179,6 +187,7 @@ with logger.catch(message="Because we never know..."):
             'H': update_status,
             'I': search_status,
             'J': delete_status,
+            'K': search_all_status_updates,
             'Q': quit_program
         }
         while True:
@@ -193,6 +202,7 @@ with logger.catch(message="Because we never know..."):
                                 H: Update status
                                 I: Search status
                                 J: Delete status
+                                K: Search all status updates
                                 Q: Quit
 
                                 Please enter your choice: """)

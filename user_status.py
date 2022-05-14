@@ -4,6 +4,7 @@ classes to manage the user status messages
 # pylint: disable=R0903
 from sqlite3 import IntegrityError
 import socialnetwork_model
+from sqlalchemy import create_engine
 from loguru import logger
 
 logger.add("out_{time:YYYY.MM.DD}.log", backtrace=True, diagnose=True)
@@ -92,3 +93,10 @@ class UserStatusCollection():
         except IntegrityError:
             logger.exception("NEW EXCEPTION")
             return False
+
+    def search_all_status_updates(user_id):
+        engine = create_engine("sqlite:///twitter.db", echo=True)
+        with engine.connect() as sqlite_connection:
+            execute = sqlite_connection.execute(f"SELECT user_id, name FROM users_table WHERE user_id in ({user_id})")
+            result = sorted([row[0] for row in execute])
+        return result

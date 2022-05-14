@@ -177,3 +177,15 @@ def search_status(status_id: str, status_collection: object):
     #      .where(socialnetwork_model.StatusTable.status_id == status_id))
     find_status = status_collection.search_status(status_id)
     return find_status
+
+def search_all_status_updates(user_id: str, status_collection: object):
+    """
+    Searches all status updates belonging to a user_id
+
+    :param user_id: ID of the user
+    :type user_id: str
+    :param status_collection: instance of the class for status methods
+    :type status_collection: object
+    """
+    all_status = status_collection.search_all_status_updates(user_id)
+    return all_status
