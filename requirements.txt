@@ -1,0 +1,7 @@
+loguru
+peewee
+pytest-mock
+pandas
+loguru
+pysnooper
+sqlalchemy
