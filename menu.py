@@ -3,6 +3,8 @@ Provides a basic frontend
 '''
 import os
 import sys
+
+from pyrsistent import v
 import main
 from peewee import *
 from loguru import logger
@@ -149,10 +151,38 @@ def delete_status():
 def search_all_status_updates():
     user_id = input('User ID: ')
     result = main.search_all_status_updates(user_id, status_collection)
-    if not main.search_all_status_updates(user_id, status_collection):
+    result_gen = (row for row in result)
+    if not result:
         print("There are no status updates for this user")
     else:
-        print(result)
+        print(f'There were {len(result)} status updates found for {user_id}')
+        while (nxt := input(f'Would you like to see the next update? (Y/N): ').lower() == 'y':
+            try:    
+                print(next(result_gen))
+            except StopIteration:
+                print('INFO: You have reached the last update. Going back to main menu')
+
+@pysnooper.snoop()
+def filter_status_by_string():
+    status_text = input('Status text to search: ')
+    result = main.main.filter_status_by_string(status_text, status_collection)
+    if not result:
+        print("There are no status updates for this text")
+    else:
+        print(f'There were {len(result)} status updates found for the search')     
+        while (nxt := input('Would you like to see review the next status? (Y/N): ').lower()) == 'y':
+            print(next(result))
+            if (del_stat := input('Would you like to delete this status? (Y/N): ').lower()) == 'y':
+                main.delete_status(status_id, status_collection)
+
+@pysnooper.snoop()
+def flagged_status_updates():
+    status_text = input('Status text to search: ')
+    result = main.main.filter_status_by_string(status_text, status_collection)
+    if not result:
+        print("There are no status updates for this text")
+    else:
+        [print(row) for row in result]
 
 @pysnooper.snoop()
 def quit_program():
@@ -188,6 +218,8 @@ with logger.catch(message="Because we never know..."):
             'I': search_status,
             'J': delete_status,
             'K': search_all_status_updates,
+            'L': filter_status_by_string,
+            'M': flagged_status_updates,
             'Q': quit_program
         }
         while True:
@@ -203,6 +235,8 @@ with logger.catch(message="Because we never know..."):
                                 I: Search status
                                 J: Delete status
                                 K: Search all status updates
+                                L: Filter status by string
+                                M: Flagged status updates
                                 Q: Quit
 
                                 Please enter your choice: """)

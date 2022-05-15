@@ -189,3 +189,15 @@ def search_all_status_updates(user_id: str, status_collection: object):
     """
     all_status = status_collection.search_all_status_updates(user_id)
     return all_status
+
+def filter_status_by_string(status_text: str, status_collection: object):
+    """
+    Searches all status updates containing a string
+
+    :param status_text: string to search
+    :type status_text: str
+    :param status_collection: instance of the class for status methods
+    :type status_collection: object
+    """
+    all_status = status_collection.filter_status_by_string(status_text)
+    return all_status

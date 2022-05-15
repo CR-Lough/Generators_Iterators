@@ -100,3 +100,15 @@ class UserStatusCollection():
             execute = sqlite_connection.execute(f"SELECT user_id, name FROM users_table WHERE user_id in ({user_id})")
             result = sorted([row[0] for row in execute])
         return result
+
+    def filter_status_by_string(status_string):
+        engine = create_engine("sqlite:///twitter.db", echo=True)
+        with engine.connect() as sqlite_connection:
+            execute = sqlite_connection.execute(f"""
+                SELECT STATUS_ID,USER_ID,STATUS_TEXT 
+                FROM users_table 
+                WHERE status_text like (%{status_string}%)
+            """)
+            result = sorted([row for row in execute])
+            result = iter(result)
+        return result
