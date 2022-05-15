@@ -4,7 +4,6 @@ Provides a basic frontend
 import os
 import sys
 
-from pyrsistent import v
 import main
 from peewee import *
 from loguru import logger
@@ -156,7 +155,7 @@ def search_all_status_updates():
         print("There are no status updates for this user")
     else:
         print(f'There were {len(result)} status updates found for {user_id}')
-        while (nxt := input(f'Would you like to see the next update? (Y/N): ').lower() == 'y':
+        while (nxt := input(f'Would you like to see the next update? (Y/N): ').lower()) == 'y':
             try:    
                 print(next(result_gen))
             except StopIteration:
@@ -165,15 +164,15 @@ def search_all_status_updates():
 @pysnooper.snoop()
 def filter_status_by_string():
     status_text = input('Status text to search: ')
-    result = main.main.filter_status_by_string(status_text, status_collection)
+    result = main.filter_status_by_string(status_text, status_collection)
     if not result:
         print("There are no status updates for this text")
-    else:
-        print(f'There were {len(result)} status updates found for the search')     
+    else:     
         while (nxt := input('Would you like to see review the next status? (Y/N): ').lower()) == 'y':
-            print(next(result))
+            temp_result = next(result)
+            print(temp_result)
             if (del_stat := input('Would you like to delete this status? (Y/N): ').lower()) == 'y':
-                main.delete_status(status_id, status_collection)
+                main.delete_status(temp_result[0][0], status_collection)
 
 @pysnooper.snoop()
 def flagged_status_updates():

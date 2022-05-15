@@ -8,6 +8,8 @@ __pycache__/
 
 # Jupyter notebooks
 *.ipynb
+*.db
+main_sqlalchemy.py
 
 # Distribution / packaging
 .Python

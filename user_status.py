@@ -94,20 +94,24 @@ class UserStatusCollection():
             logger.exception("NEW EXCEPTION")
             return False
 
-    def search_all_status_updates(user_id):
+    def search_all_status_updates(self, user_id):
         engine = create_engine("sqlite:///twitter.db", echo=True)
         with engine.connect() as sqlite_connection:
-            execute = sqlite_connection.execute(f"SELECT user_id, name FROM users_table WHERE user_id in ({user_id})")
+            execute = sqlite_connection.execute(f"""
+                SELECT status_text 
+                FROM statustable 
+                WHERE user_id in ('{user_id}')
+            """)
             result = sorted([row[0] for row in execute])
         return result
 
-    def filter_status_by_string(status_string):
+    def filter_status_by_string(self, status_string):
         engine = create_engine("sqlite:///twitter.db", echo=True)
         with engine.connect() as sqlite_connection:
             execute = sqlite_connection.execute(f"""
                 SELECT STATUS_ID,USER_ID,STATUS_TEXT 
-                FROM users_table 
-                WHERE status_text like (%{status_string}%)
+                FROM statustable 
+                WHERE status_text like '%{status_string}%'
             """)
             result = sorted([row for row in execute])
             result = iter(result)
